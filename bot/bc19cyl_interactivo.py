@@ -236,7 +236,7 @@ dic_ge = {"av": "Gerencia de Ávila", "bu": "Gerencia de Burgos", "le": "Gerenci
 # DATOS
 telegram_token = os.environ['TELEGRAM_TOKEN']
 mongoconnection = os.environ['URI_MONGODB']
-idadmin = int(mongoconnection = os.environ['ID_ADMIN'])
+idadmin = int(os.environ['ID_ADMIN'])
 
 # Instanciamos log
 logger = logrm.init_log(loggername="bc19cyl-interactivo")

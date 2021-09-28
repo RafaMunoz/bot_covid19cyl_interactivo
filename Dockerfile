@@ -10,7 +10,8 @@ RUN set -eux \
   && pip install pymongo \
   && pip install urllib3 \
   && pip install pytelegrambotapi \
-  && pip install graypy
+  && pip install graypy \
+  && pip install dnspython
 
 RUN mkdir /opt/bot
 COPY ./bot /opt/bot

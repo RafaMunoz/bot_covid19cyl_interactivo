@@ -857,12 +857,15 @@ def callback_inline(call):
 
                 mensaje = u"\U0001F9A0 Indicadores de Riesgo en *{0}* -> {1}\n\n".format(dic[sep[1]], fecha_msj)
 
-                leyenda = {"Nueva normalidad": "🟢", "Bajo": "🟡", "Medio": "🟠", "Alto": "🔴", "Muy alto": "⚫"}
+                leyenda = {"Riesgo controlado": "🟢", "Nueva normalidad": "🟢", "Bajo": "🟡", "Medio": "🟠", "Alto": "🔴", "Muy alto": "⚫"}
 
                 for data in res_indicadores["records"]:
                     fecha = data["fields"]["fecha"]
                     indicador = data["fields"]["indicador"]
-                    valor = data["fields"]["valor"]
+                    if "valor" in data["fields"]:
+                        valor = data["fields"]["valor"]
+                    else:
+                        valor = "-"
                     valoracion = data["fields"]["valoracion"]
 
                     mensaje = "{0}*{1}*\n".format(mensaje, indicador)
@@ -921,8 +924,7 @@ def callback_inline(call):
             try:
                 sep = call.data.split("_")
 
-                url_totalrecividas_provincia = "https://analisis.datosabiertos.jcyl.es/api/records/1.0/search/?dataset=vacunas-recibidas-covid&q=&rows=4&sort=fecha&facet=fecha&facet=provincia&facet=marca&refine.provincia={0}".format(
-                    dic[sep[1]])
+                url_totalrecividas_provincia = "https://analisis.datosabiertos.jcyl.es/api/records/1.0/analyze/?disjunctive.provincia=true&refine.provincia={0}&timezone=Europe%2FMadrid&dataset=vacunas-recibidas-covid&x=marca&sort=&maxpoints=&y.serie1-1.expr=total_vacunas_recibidas&y.serie1-1.func=MAX&y.serie1-1.cumulative=false&lang=es".format(dic[sep[1]])
                 url_totalvacunadas_provincia = "https://analisis.datosabiertos.jcyl.es/api/records/1.0/analyze/?disjunctive.provincia=true&refine.provincia={0}&timezone=Europe%2FMadrid&dataset=personas-vacunadas-covid&x=provincia&sort=&maxpoints=&y.serie1-1.expr=personas_vacunadas_ciclo_completo&y.serie1-1.func=SUM&y.serie1-1.cumulative=false&y.serie1-2.expr=dosis_administradas&y.serie1-2.func=SUM&y.serie1-2.cumulative=false&lang=es".format(
                     dic[sep[1]])
                 url_ultimasvacunadas = "https://analisis.datosabiertos.jcyl.es/api/records/1.0/search/?dataset=personas-vacunadas-covid&q=&rows=1&sort=fecha&facet=fecha&facet=provincia&facet=personas_vacunadas&refine.provincia={0}".format(
@@ -933,9 +935,9 @@ def callback_inline(call):
                 ultimasvacunadas = requestAPI(url_ultimasvacunadas)
 
                 msg_totalrecividas_provincia = ""
-                for marca in totalrecividas_provincia["records"]:
+                for marca in totalrecividas_provincia:
                     msg_totalrecividas_provincia = msg_totalrecividas_provincia + "    - {0}: *{1}*\n".format(
-                        marca["fields"]["marca"], int(marca["fields"]["total_vacunas_recibidas"]))
+                        marca["x"], int(marca["serie1-1"]))
 
                 total_dosisadministradas = int(totalvacunadas_provincia[0]["serie1-2"])
                 total_dosisadministradas_ciclocompleto = int(totalvacunadas_provincia[0]["serie1-1"])

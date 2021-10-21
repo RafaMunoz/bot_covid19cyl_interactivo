@@ -1,1 +1,1 @@
-rafa93m/bot_covid19cyl_interactivo_1.13.2
+rafa93m/bot_covid19cyl_interactivo_1.14.1

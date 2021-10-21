@@ -202,6 +202,16 @@ def fechaDataset(dataset):
     date_msj = datetime.strftime(date, "%d-%m-%Y")
     return date_url, date_msj
 
+# Devolvemos la fecha del dataset menos 1 dia
+def fechaDataset_1(dataset):
+    url = "https://analisis.datosabiertos.jcyl.es/api/datasets/1.0/{0}/?extrametas=true&interopmetas=true&source=&timezone=Europe%2FBerlin&lang=es".format(
+        dataset)
+    res = requestAPI(url)
+    date = res['metas']['data_processed']
+    date = datetime.fromisoformat(date)
+    date_url = datetime.strftime(date - timedelta(days=1), "%Y-%m-%d")
+    date_msj = datetime.strftime(date, "%d-%m-%Y")
+    return date_url, date_msj
 
 # Activar notificacion
 def activarNotificacion(message):
@@ -844,9 +854,8 @@ def callback_inline(call):
         elif re.match("indicadorriesgo", call.data):
             try:
                 sep = call.data.split("_")
-
                 dataset = "indicadores-de-riesgo-covid-19-por-provincias"
-                fecha_url, fecha_msj = fechaDataset(dataset)
+                fecha_url, fecha_msj = fechaDataset_1(dataset)
 
                 url = "https://analisis.datosabiertos.jcyl.es/api/records/1.0/search/?dataset=indicadores-de-" \
                       "riesgo-covid-19-por-provincias&q=&facet=fecha&facet=provincia&facet=indicador&facet=valoracion" \
